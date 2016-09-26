@@ -1,0 +1,35 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.7
+version = '1.0'
+
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+}
+
+sourceSets {
+	main.java.srcDir 'src/main/java'
+}
+jar {
+	from configurations.compile.collect { zipTree it }
+    manifest.attributes 'Main-Class': 'main.SortingViewer'
+    
+}
+
+task runJar(type: Exec,dependsOn: jar){
+	executable 'java'
+	args '-jar', "$jar.archivePath"
+}
+
+task run(type: JavaExec,dependsOn: classes){
+	main 'main.SortingViewer'
+	classpath sourceSets.main.runtimeClasspath
+	
+}
